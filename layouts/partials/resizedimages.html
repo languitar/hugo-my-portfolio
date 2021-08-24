@@ -1,0 +1,35 @@
+{{ $original := . }}
+
+{{ $defaultSize := site.Params.defaultImageSize }}
+{{ $sizes := sort site.Params.additionalImageSizes }}
+{{ $largestSize := index (last 1 $sizes) 0 }}
+{{ $temp := newScratch }}
+{{ $temp.Set "sizes" $sizes }}
+{{ if (and (lt $original.Width $largestSize) (lt $original.Height $largestSize)) }}
+    {{ if (gt $original.Width $original.Height) }}
+        {{ $sizes = $sizes | append $original.Width }}
+    {{ else }}
+        {{ $sizes = $sizes | append $original.Height }}
+    {{ end }}
+{{ end }}
+{{ $sizes = sort $sizes }}
+
+{{ $scratch := newScratch }}
+{{ $scratch.Set "images" (slice) }}
+{{ $scratch.Set "srcset" (slice) }}
+{{ $scratch.Set "largets" nil }}
+
+{{ $scratch.Set "default" ($original.Fit (printf "%dx%d" $defaultSize $defaultSize)) }}
+
+{{ range $size := $sizes }}
+    {{ if (or (ge $original.Width $size) (ge $original.Height $size)) }}
+        {{ $resized := $original.Fit (printf "%dx%d" $size $size) }}
+        {{ $scratch.Add "images" $resized }}
+        {{ $scratch.Add "srcset" (printf "%s %dw" $resized.RelPermalink $resized.Width) }}
+        {{ $scratch.Set "largest" $resized }}
+    {{ end }}
+{{ end }}
+
+{{ $scratch.Set "srcset" (delimit ($scratch.Get "srcset") ", ") }}
+
+{{ return (dict "Images" ($scratch.Get "images") "Default" ($scratch.Get "default") "Srcset" ($scratch.Get "srcset") "Largest" ($scratch.Get "largest")) }}

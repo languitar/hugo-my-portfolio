@@ -1,0 +1,38 @@
+{{ $enlarge := (.enlargeFirst | default false) }}
+
+<div class="columns is-multiline has-text-left">
+    {{ range $index, $item := .pages }}
+    <div class="column {{ if and (eq $index 0) $enlarge }}is-two-thirds{{ else }}is-one-third{{ end }}">
+        <a href="{{ .RelPermalink }}">
+            <article class="card list-card" data-aos="fade-in">
+                <div class="card-image">
+                    <figure class="image is-3by2 is-marginless">
+                            {{ with $item.Resources.GetMatch "thumbnail" | default ($item.Resources.GetMatch "cover") }}
+                            {{ $resized := .Fill "1800x1200" }}
+                            <img src="{{ $resized.RelPermalink }}" alt="Banner image for the blog post {{ $item.Title }}">
+                            {{ else }}
+                            <img src="{{ "/img/writing.svg" | relURL }}" alt="Banner image for the blog post {{ $item.Title }}">
+                            {{ end }}
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div>
+                        <p class="list-item-date is-size-7 has-text-grey"><time datetime={{ .Date.Format "2006-01-02" }}>{{ .Date.Format "2006-01-02" }}</time></p>
+                        <h2 class="title is-size-4">{{ .Title | title }}</h2>
+                        {{ with .Params.Subtitle }}
+                        <p class="subtitle">{{ . }}</p>
+                        {{ end }}
+
+                        <p class="list-item-summary">{{ .Summary | plainify }}</p>
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <div class="card-footer-item has-text-link">
+                        continue reading
+                    </div>
+                </footer>
+            </article>
+        </a>
+    </div>
+    {{ end }}
+</div>

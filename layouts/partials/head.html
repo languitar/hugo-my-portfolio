@@ -1,0 +1,88 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}">
+{{ with .Params.tags }}
+<meta name="keywords" content="{{ delimit . ", " }}">
+{{ end }}
+<base href="{{ .Site.BaseURL }}">
+<title>{{ if eq (.Site.Title) (.Title) }}{{ .Site.Title }}{{ else }}{{ .Title }} &middot; {{ .Site.Title }}{{ end }}</title>
+
+{{ $burgerJs := resources.Get "js/burger.js" | resources.Minify | fingerprint }}
+{{ $jqueryJs := resources.Get "js/jquery-3.5.0.min.js" | fingerprint }}
+
+{{ $flickityMainCss := resources.Get "css/flickity.css" | resources.Minify }}
+{{ $flickityFadeCss := resources.Get "css/flickity-fade.css" | resources.Minify }}
+{{ $flickityFullscreenCss := resources.Get "css/flickity-fullscreen.css" | resources.Minify }}
+{{/* flickity fullscreen breaks if the concatenation is minified */}}
+{{ $flickityCss := slice $flickityMainCss $flickityFadeCss $flickityFullscreenCss | resources.Concat "css/flickity.css" | fingerprint }}
+{{ $flickityMainJs := resources.Get "js/flickity.pkgd.min.js" | fingerprint }}
+{{ $flickityFadeJs := resources.Get "js/flickity-fade.js" | resources.Minify | fingerprint }}
+{{ $flickityFullscreenJs := resources.Get "js/flickity-fullscreen.js" | resources.Minify | fingerprint }}
+
+{{ $justifiedGalleryCss := resources.Get "css/justifiedGallery.min.css" | fingerprint }}
+{{ $justifiedGalleryJs := resources.Get "js/jquery.justifiedGallery.js" | resources.Minify | fingerprint }}
+
+{{ $lightGalleryJs := resources.Get "js/lightgallery.min.js" | fingerprint }}
+{{ $lightGalleryHashJs := resources.Get "js/lg-hash.min.js" | fingerprint }}
+
+{{ $aosCss := resources.Get "css/aos.css" | resources.Minify | fingerprint }}
+
+{{ $mainCss := resources.Get "sass/main.scss" | resources.ExecuteAsTemplate "main.scss" . | resources.ToCSS | resources.Minify | fingerprint }}
+
+<link rel="preload" href="{{ $burgerJs.RelPermalink }}" as="script">
+<link rel="preload" href="{{ $jqueryJs.RelPermalink }}" as="script">
+<link rel="preload" href="{{ $flickityCss.RelPermalink }}" as="style">
+<link rel="preload" href="{{ $flickityMainJs.RelPermalink }}" as="script">
+<link rel="preload" href="{{ $flickityFadeJs.RelPermalink }}" as="script">
+<link rel="preload" href="{{ $justifiedGalleryCss.RelPermalink }}" as="style">
+<link rel="preload" href="{{ $aosCss.RelPermalink }}" as="style">
+<link rel="preload" href="{{ $mainCss.RelPermalink }}" as="style">
+
+<script src="{{ $burgerJs.RelPermalink }}"></script>
+<script src="{{ $jqueryJs.RelPermalink }}"></script>
+
+<link rel="stylesheet" href="{{ $flickityCss.RelPermalink }}">
+<script src="{{ $flickityMainJs.RelPermalink }}"></script>
+<script src="{{ $flickityFadeJs.RelPermalink }}"></script>
+<script src="{{ $flickityFullscreenJs.RelPermalink }}"></script>
+
+<link rel="stylesheet" href="{{ $justifiedGalleryCss.RelPermalink }}">
+<script src="{{ $justifiedGalleryJs.RelPermalink }}" defer></script>
+
+<script src="{{ $lightGalleryJs.RelPermalink }}" defer></script>
+<script src="{{ $lightGalleryHashJs.RelPermalink }}" defer></script>
+
+<link rel="stylesheet" href="{{ $aosCss.RelPermalink }}">
+
+<link rel="stylesheet" href="{{ $mainCss.RelPermalink }}">
+
+{{ range site.Param "favicons" }}
+{{ $icon := resources.Get . }}
+<link rel="icon" type="image/png" href="{{ $icon.RelPermalink  }}" sizes="{{ printf `%dx%d` $icon.Width $icon.Height }}">
+{{ end }}
+{{ with site.Param "appleTouchIcon" }}
+{{ $icon := resources.Get . }}
+<link rel="apple-touch-icon" sizes="{{ printf `%dx%d` $icon.Width $icon.Height }}" href="{{ $icon.RelPermalink }}">
+{{ end }}
+
+{{ partial "opengraph.html" . }}
+{{ partial "twitter.html" . }}
+
+{{ range .AlternativeOutputFormats -}}
+    {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
+{{ end -}}
+
+<noscript>
+    <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+        .animate-loading {
+            filter: opacity(1) !important;
+        }
+        .hero-carousel .carousel-container {
+            display: none !important;
+        }
+    </style>
+</noscript>

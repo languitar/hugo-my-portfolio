@@ -1,0 +1,52 @@
+.navbar {
+  .logo {
+    display: flex;
+    align-items: center;
+    // Prevent the brand logo from leaking to the left.
+    // Brand is usually spaced to the left by this amount.
+    margin-left: 0.75rem;
+
+    .logo-main {
+      font-family: Teko;
+      font-weight: 400;
+      line-height: 0.7;
+    }
+  }
+
+  @include from($desktop) {
+    .has-dropdown:hover .navbar-dropdown {
+      animation: fade_in_show $animation-fast;
+      animation-timing-function: ease-in-out;
+    }
+  }
+
+  @keyframes fade_in_show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @include until($desktop) {
+  .navbar-menu {
+    display: block;
+    opacity: 0;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+
+    transform: translateY(-50%);
+    transition: all $animation-fast ease-in-out;
+    pointer-events: none;
+  }
+
+  .navbar-menu.is-active {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  }
+}

@@ -1,0 +1,76 @@
+{{ define "main" }}
+
+<section class="section post-header">
+    <div class="container">
+        <h1 class="title is-size-1-desktop">
+            {{ .Title | title }}
+        </h1>
+        {{ with .Params.subtitle }}
+        <h2 class="subtitle is-size-4-desktop">
+            {{ . }}
+        </h2>
+        {{ end }}
+
+        <div class="level">
+            <div class="level-left">
+                {{ with .Site.Param "postAuthor" }}
+                <div class="level-item">
+                    {{ $avatar := (resources.Get .).Fit "128x128 q55" }}
+                    <figure class="image is-64x64 is-marginless">
+                        <img class="is-rounded" src="{{ $avatar.RelPermalink }}" alt="Avatar of {{ . | plainify }}">
+                    </figure>
+                </div>
+                {{ end }}
+                <div class="level-item is-6 has-text-centered-mobile">
+                    <div>
+                        <p class="is-marginless">By {{ .Site.Author.name }}</p>
+                        <p class="has-text-grey is-size-7"><time datetime={{ .Date.Format "2006-01-02" }}>{{ .Date.Format "2006-01-02" }}</time></p>
+                    </div>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <div class="tags">
+                        {{ range (.GetTerms "tags") }}
+                            <span class="tag"><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></span>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{ with .Resources.GetMatch "cover" }}
+<section class="hero is-dark post-hero-banner">
+    <div class="hero-body is-paddingless">
+        {{ with partial "resizedimages.html" . }}
+
+        <a
+            href="{{ .Default.RelPermalink }}"
+            class="use-in-lg"
+            {{ with .Srcset }}{{ printf "data-srcset=\"%s\"" . | safeHTMLAttr }}{{ end }}
+            data-sizes="100vw">
+            <picture class="animate-loading">
+                {{ range .Images }}
+                    <source media="{{ (printf "(max-width: %dpx) and (max-height: %dpx)" .Width .Height) }}" srcset="{{ .RelPermalink }}" />
+                {{ end }}
+                {{ with .Largest }}
+                    <source media="{{ (printf "(min-width: %dpx) or (min-height: %dpx)" .Width .Height) }}" srcset="{{ .RelPermalink }}" />
+                {{ end }}
+                <img src="{{ .Default.RelPermalink }}" alt="Cover image" />
+            </picture>
+        </a>
+
+        {{ end }}
+    </div>
+</section>
+{{ end }}
+
+<section class="section">
+    <div class="container content">
+        {{ .Content }}
+    </div>
+</section>
+
+{{ end }}

@@ -1,0 +1,54 @@
+<footer class="footer">
+    <div class="container has-text-centered">
+        <div class="columns is-centered">
+            <div class="column is-one-third">
+                <p class="title is-size-5">Follow me</p>
+                <div class="social">
+                    <a href="https://www.instagram.com/languitar/" title="languitar on instagram">
+                        <span class="icon is-medium">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </span>
+                    </a>
+                    <a href="https://www.flickr.com/photos/languitar/" title="languitar on flickr">
+                        <span class="icon is-medium">
+                            <i class="fab fa-flickr fa-lg"></i>
+                        </span>
+                    </a>
+                    <a href="https://500px.com/languitar" title="languitar on 500px">
+                        <span class="icon is-medium">
+                            <i class="fab fa-500px fa-lg"></i>
+                        </span>
+                    </a>
+                    <a href="https://www.pinterest.com/languitar/" title="languitar on Pinterest">
+                        <span class="icon is-medium">
+                            <i class="fab fa-pinterest fa-lg"></i>
+                        </span>
+                    </a>
+                    {{ with .OutputFormats.Get "atom" | default (.Site.Home.OutputFormats.Get "atom") }}
+                    <a href="{{ .RelPermalink }}" title="Atom feed">
+                        <span class="icon is-medium">
+                            <i class="fas fa-rss fa-lg"></i>
+                        </span>
+                    </a>
+                    {{ end }}
+                </div>
+            </div>
+            <div class="column is-one-third">
+                <p class="title is-size-5">Legal</p>
+                {{ $currentPage := . }}
+                {{ range $i, $item := .Site.Menus.footer }}
+                    {{ if $i }}
+                    ·
+                    {{ end }}
+                    {{ $active := or ($currentPage.IsMenuCurrent "footer" $item) ($currentPage.HasMenuCurrent "footer" $item) }}
+                    <a href="{{ $item.URL }}">{{ $item.Name }}</a>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+    <div class="has-text-centered content has-margin-top-48">
+        {{ with .Site.Params.footer }}
+        {{ . | markdownify }}
+        {{ end }}
+    </div>
+</footer>

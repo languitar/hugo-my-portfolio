@@ -1,0 +1,14 @@
+{{ define "main" }}
+
+{{ .Content }}
+
+<section class="hero is-light has-text-centered">
+    <div class="hero-body" data-aos="fade-in">
+        <div class="container">
+            <h2 class="title">Recently Published</h2>
+            {{ partial "post-tiles.html" (dict "context" . "pages" (where site.RegularPages.ByPublishDate.Reverse "Section" "in" (slice "posts" "stories") | first 3) "enlargeFirst" false) }}
+        </div>
+    </div>
+</section>
+
+{{ end }}

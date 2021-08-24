@@ -1,0 +1,35 @@
+{{ $imageResource := .Page.Resources.GetMatch (.Get "src") }}
+{{ $alttext := default (.Get "caption") (.Get "alt") }}
+{{ $caption := (.Get "caption") }}
+
+<figure class="image">
+    {{ with partial "resizedimages.html" $imageResource }}
+
+    <a
+        href="{{ .Default.RelPermalink }}"
+        class="use-in-lg"
+        {{ with .Srcset }}{{ printf "data-srcset=\"%s\"" . | safeHTMLAttr }}{{ end }}
+        {{ with $caption }}data-sub-html="{{ . }}"{{ end }}
+        data-sizes="100vw">
+        <img
+            {{ with $alttext }}alt="{{ . }}"{{ end }}
+            {{ with .Srcset }}{{ printf "srcset=\"%s\"" . | safeHTMLAttr }}{{ end }}
+            sizes="100vw"
+            src="{{ .Default.RelPermalink }}"
+            loading="lazy"
+            class="animate-loading"
+            data-aos="fade-in"
+            {{ with .Largest }}
+                style="max-width: {{ .Width }}px;"
+                width="{{ .Width }}"
+                height="{{ .Height }}"
+            {{ end }}
+        />
+    </a>
+
+    {{ end }}
+
+    {{ with .Get "caption" }}
+    <figcaption>{{ . }}</figcaption>
+    {{ end }}
+</figure>

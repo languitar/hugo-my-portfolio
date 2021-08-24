@@ -1,0 +1,9 @@
+<section class="hero {{ .Get "class" }}" {{ with .Get "id" }} id="{{ . }}" {{ end }}>
+    <div class="hero-body">
+        <div class="hero-head"></div>
+        <div class="container">
+            {{ .Inner }}
+        </div>
+    </div>
+    <div class="hero-foot"></div>
+</section>

@@ -1,0 +1,12 @@
+<section class="section post-header">
+    <div class="container">
+        <h1 class="title is-size-1-desktop">
+            {{ .Title | title }}
+        </h1>
+        {{ with .Params.Subtitle }}
+        <h2 class="subtitle is-size-4-desktop">
+            {{ . }}
+        </h2>
+        {{ end }}
+    </div>
+</section>

@@ -1,0 +1,22 @@
+{{ define "main" }}
+
+{{ partial "basic-title.html" . }}
+
+<section class="section list-site">
+    <div class="container">
+        <div class="field is-grouped is-grouped-multiline">
+            {{ range .Pages.ByTitle }}
+                <div class="control">
+                    <a href="{{ .RelPermalink }}">
+                        <div class="tags has-addons">
+                            <span class="tag">{{ .Title }}</span>
+                            <span class="tag is-info">{{ .Pages | len }}</span>
+                        </div>
+                    </a>
+                </div>
+            {{ end }}
+        </div>
+    </div>
+</section>
+
+{{ end }}

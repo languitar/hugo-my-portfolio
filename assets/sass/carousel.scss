@@ -1,0 +1,96 @@
+// carousels
+.hero-carousel {
+  flex: 1;
+  display: flex;
+
+  height: calc(100vh - #{$navbar-height});
+  max-height: 100vw;
+
+  background-color: black;
+
+  .carousel-container {
+    flex: 1;
+
+    img {
+      display: flex;
+      height: 100%;
+      object-fit: cover;
+      // margin-right: 12px;
+
+      // opacity: 0.0;
+      transition: opacity $animation-slow;
+
+      // &.is-selected.flickity-lazyloaded {
+      //   opacity: 1;
+      // }
+    }
+  }
+
+  noscript {
+    width: 100%;
+  }
+
+  .hero-noscript-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.hero.is-carousel {
+  display: block;
+  max-width: 100%;
+}
+
+// less disturbing icons
+.flickity-button {
+  background: #333;
+  opacity: 0;
+  transition: opacity $animation-fast, background $animation-fast;
+  outline: none;
+}
+.flickity-button:hover {
+  background: $primary;
+}
+.flickity-prev-next-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+}
+.flickity-button-icon {
+  fill: white;
+}
+
+.carousel-container:hover > .flickity-button {
+  opacity: 1;
+}
+
+// fullscreen mode
+.carousel-container.is-fullscreen {
+  z-index: 9999 !important;
+  padding-bottom: 0;
+
+  background: black;
+  transition: background $animation-slow;
+
+  .carousel-cell {
+    display: flex;
+  }
+
+  img {
+    object-fit: contain;
+  }
+}
+
+.is-flickity-fullscreen {
+  header {
+    display: none;
+  }
+  .hero-carousel {
+    min-height: 100vh;
+  }
+
+  img {
+      width: 100%;
+  }
+}

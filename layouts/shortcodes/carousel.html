@@ -1,0 +1,54 @@
+{{ $page := .Site.GetPage (.Get "page") | default . }}
+{{ $images := $page.Resources.Match (.Get "folder") }}
+
+<section class="hero is-light is-carousel">
+    <div class="hero-carousel" data-aos="fade-in">
+        <div class="carousel-container" id="{{ .Get "id" }}">
+            {{ range $imageResource := $images }}
+
+                {{ with partial "resizedimages.html" $imageResource }}
+
+                <img
+                    {{ with .Srcset }}{{ printf "data-flickity-lazyload-srcset=\"%s\"" . | safeHTMLAttr }}{{ end }}
+                    sizes="100vw"
+                    data-flickity-lazyload-src="{{ .Default.RelPermalink }}"
+                />
+
+                {{ end }}
+
+            {{ end }}
+        </div>
+        <script>
+            $('#{{ .Get "id" }}').flickity({
+                // options
+                lazyLoad: 2,
+                contain: false,
+                wrapAround: true,
+                pageDots: false,
+                percentPosition: false,
+                autoPlay: 7000,
+                fullscreen: true,
+                setGallerySize: false,
+                selectedAttraction: 0.006,
+                friction: 0.15,
+                fullscreen: true,
+                imagesLoaded: true
+            });
+        </script>
+
+        {{ $first := index $images 0 }}
+        {{ with partial "resizedimages.html" $first }}
+
+        <noscript>
+            <img
+                class="hero-noscript-image"
+                {{ with .Srcset }}{{ printf "srcset=\"%s\"" . | safeHTMLAttr }}{{ end }}
+                sizes="100vw"
+                src="{{ .Default.RelPermalink }}"
+            />
+        </noscript>
+
+        {{ end }}
+
+    </div>
+</section>

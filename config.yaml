@@ -1,0 +1,10 @@
+---
+mediaTypes:
+  application/atom+xml:
+    suffixes: ["xml"]
+
+outputFormats:
+  Atom:
+    name: "atom"
+    baseName: "feed"
+    mediaType: "application/atom+xml"

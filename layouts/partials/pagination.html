@@ -1,0 +1,28 @@
+{{ $pag := $.Paginator }}
+{{ if gt $pag.TotalPages 1 }}
+<nav class="pagination is-centered" aria-label="pagination">
+    <a {{ if $pag.HasPrev }}href="{{ $pag.Prev.URL }}"{{ end }} class="pagination-previous" aria-label="Previous page"><span aria-hidden="true">Previous page</span></a>
+    <a {{ if $pag.HasNext }}href="{{ $pag.Next.URL }}"{{ end }} class="pagination-next" aria-label="Next page"><span aria-hidden="true">Next page</span></a>
+    <ul class="pagination-list">
+    {{ $ellipsed := false }}
+    {{ $shouldEllipse := false }}
+    {{ range $pag.Pagers }}
+    {{ $right := sub .TotalPages .PageNumber }}
+    {{ $showNumber := or (le .PageNumber 3) (eq $right 0) }}
+    {{ $showNumber := or $showNumber (and (gt .PageNumber (sub $pag.PageNumber 2)) (lt .PageNumber (add $pag.PageNumber 2)))  }}
+    {{ if $showNumber }}
+        {{ $ellipsed = false }}
+        {{ $shouldEllipse = false }}
+    {{ else }}
+        {{ $shouldEllipse = not $ellipsed }}
+        {{ $ellipsed = true }}
+    {{ end }}
+    {{ if $showNumber }}
+    <li><a class="pagination-link{{ if eq . $pag }} is-current{{ end }}" href="{{ .URL }}" aria-label="Goto page {{ .PageNumber }}">{{ .PageNumber }}</a></li>
+    {{ else if $shouldEllipse }}
+    <li><span class="pagination-ellipsis">&hellip;</span></li>
+    {{ end }}
+    {{ end }}
+    </ul>
+</nav>
+{{ end }}

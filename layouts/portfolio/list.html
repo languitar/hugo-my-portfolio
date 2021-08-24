@@ -1,0 +1,36 @@
+{{ define "main" }}
+
+{{ partial "basic-title.html" . }}
+
+<section class="section list-site">
+    <div class="container">
+        <div class="columns is-multiline has-text-left">
+            {{ range $index, $item := .Pages }}
+            <div class="column is-half">
+                <article class="card list-card" data-aos="fade-in">
+                    <a href="{{ .RelPermalink }}">
+                        <div class="card-image">
+                            <figure class="image is-3by2 is-marginless">
+                                {{ with $item.Resources.GetMatch "thumbnail" | default ($item.Resources.GetMatch "cover") }}
+                                {{ $resized := .Fill "1800x1200" }}
+                                <img src="{{ $resized.RelPermalink }}" alt="Banner image for the blog post {{ $item.Title }}">
+                                {{ else }}
+                                <img src="{{ "/img/writing.svg" | relURL }}" alt="Banner image for the blog post {{ $item.Title }}">
+                                {{ end }}
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <div class="content">
+                                <h3 class="title">{{ .Title }}</h3>
+                                <p class="subtitle">{{ .Params.Subtitle }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</section>
+
+{{ end }}

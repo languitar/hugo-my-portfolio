@@ -1,0 +1,110 @@
+{{ $currentPage := . }}
+
+{{ $images := (.Page.Resources.ByType "image") }}
+{{ if .Get "match"}}
+    {{ $images = (.Page.Resources.Match (.Get "match")) }}
+{{ end }}
+
+{{ $caption := .Get "caption" }}
+
+{{ $sortOrder := .Get "sortOrder" | default (.Site.Params.gallerySortOrder | default "asc") }}
+{{ $rowHeight := .Get "rowHeight" | default (.Site.Params.galleryRowHeight | default 150) }}
+{{ $margins := .Get "margins" | default (.Site.Params.galleryRowMargins | default 5) }}
+{{ $justifiedGalleryParameters := .Get "justifiedGalleryParameters" | default (.Site.Params.galleryJustifiedGalleryParameters | default "") }}
+
+{{ $thumbnailSizes := $.Site.Params.galleryThumbnailSizes }}
+
+{{ $galleryId := (printf "gallery-%v" .Ordinal)}}
+
+<figure class="image">
+    <div id="{{ $galleryId }}" class="justified-gallery" data-aos="fade-in">
+        {{ range $original := sort $images "Name" $sortOrder}}
+
+            {{ $defaultThumbnail := $original.Resize "1x1 q55" }}
+            {{ $defaultThumbnailEmbed := $original.Resize "1x1 png" }}
+            {{ range $size := $thumbnailSizes }}
+                {{ $resized := $original.Fit (printf "%dx%d" $size $size) }}
+            {{- end -}}
+
+            {{ with partial "resizedimages.html" $original }}
+
+            <a
+                href="{{ $defaultThumbnail.RelPermalink }}"
+                class="galleryImg use-in-lg"
+                {{ with .Srcset }}{{ printf "data-srcset=\"%s\"" . | safeHTMLAttr }}{{ end }}
+                data-sizes="100vw"
+                {{ with $caption }}
+                data-sub-html="{{ . | safeHTMLAttr }}"
+                {{ end }}
+            >
+
+            {{ end }}
+                <img
+                    width="{{ $original.Width }}"
+                    height="{{ $original.Height }}"
+                    {{/* Used just as placeholder for the image name prefix to use */}}
+                    data-safe-src="{{ $defaultThumbnail.RelPermalink }}"
+                    src="data:image/png;base64,{{ $defaultThumbnailEmbed.Content | base64Encode }}"
+                    alt="{{ with $caption }}{{ . | safeHTMLAttr }}{{ else }}gallery image{{ end }}"
+                />
+            </a>
+        {{ end }}
+    </div>
+
+    <noscript>
+        {{ range $original := sort $images "Name" $sortOrder}}
+            {{ with partial "resizedimages.html" $original }}
+
+            <a
+                href="{{ .Default.RelPermalink }}"
+                {{ with .Srcset }}{{ printf "data-srcset=\"%s\"" . | safeHTMLAttr }}{{ end }}
+                data-sizes="100vw"
+                {{ with $caption }}
+                data-sub-html="{{ . | safeHTMLAttr }}"
+                {{ end }}
+            >
+
+                <img
+                    alt="{{ with $caption }}{{ . | safeHTMLAttr }}{{ else }}gallery image{{ end }}"
+                    {{ with .Srcset }}{{ printf "srcset=\"%s\"" . | safeHTMLAttr }}{{ end }}
+                    sizes="100vw"
+                    src="{{ .Default.RelPermalink }}"
+                    loading="lazy"
+                    class="animate-loading"
+                    {{ with .Largest }}
+                        style="max-width: {{ .Width }}px;"
+                        width="{{ .Width }}"
+                        height="{{ .Height }}"
+                    {{ end }}
+                />
+            </a>
+            {{ end }}
+        {{ end }}
+    </noscript>
+
+    {{ with $caption }}
+    <figcaption>{{ . }}</figcaption>
+    {{ end }}
+</figure>
+
+<script>
+    $(document).ready(function() {
+        const gallery = $("#{{ $galleryId }}");
+
+        gallery.justifiedGallery({
+            rowHeight: {{ $rowHeight }},
+            maxRowHeight: {{ index (last 1 $thumbnailSizes) 0 | int }},
+            margins: {{ $margins }},
+            border: 0,
+            waitThumbnailsLoad: false,
+            lastRow: 'justify',
+            captions: false,
+            sizeRangeSuffixes: {
+                {{ range $thumbnailSizes }}
+                    {{ . | printf "lt%d" }}: {{ printf "_%dx%d_fit_q70_box" . . }},
+                {{ end }}
+                'lt1': "_1x1_resize_q55_box"
+            },
+        });
+    });
+</script>

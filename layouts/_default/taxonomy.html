@@ -1,0 +1,11 @@
+{{ define "main" }}
+
+{{ partial "basic-title.html" . }}
+
+<section class="section list-site">
+    <div class="container">
+        {{ partial "post-tiles.html" (dict "context" . "pages" $.Pages.ByPublishDate.Reverse "enlargeFirst" false) }}
+    </div>
+</section>
+
+{{ end }}

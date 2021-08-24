@@ -1,0 +1,167 @@
+@charset "utf-8";
+
+@import "./bulma/sass/utilities/initial-variables.sass";
+@import "./bulma/sass/utilities/functions.sass";
+
+$navbar-height: 4.8rem;
+
+$primary: #3973ac;
+
+$body-font-size: 1.05rem;
+$body-family: 'Open Sans', sans-serif;
+$title-family: 'Archivo', sans-serif;
+$size-1: 3.5rem;
+$size-7: 0.92rem;
+
+$animation-fast: 0.4s;
+$animation-slow: 1.2s;
+
+$font-path: "{{ "/fonts" | relURL }}";
+
+// @import "./bulma/";
+@import "./bulma/sass/utilities/_all.sass";
+@import "./bulma/sass/base/_all.sass";
+@import "./bulma/sass/grid/_all.sass";
+@import "./bulma/sass/layout/_all.sass";
+@import "./bulma/sass/elements/tag.sass";
+@import "./bulma/sass/elements/icon.sass";
+@import "./bulma/sass/elements/image.sass";
+@import "./bulma/sass/elements/title.sass";
+@import "./bulma/sass/elements/content.sass";
+@import "./bulma/sass/elements/container.sass";
+@import "./bulma/sass/form/shared.sass";
+@import "./bulma/sass/form/tools.sass";
+@import "./bulma/sass/components/card.sass";
+@import "./bulma/sass/components/level.sass";
+@import "./bulma/sass/components/navbar.sass";
+@import "./bulma/sass/components/pagination.sass";
+
+@import "./bulma-spacing.scss";
+@import "./fonts.scss";
+$fa-font-path: $font-path;
+@import "./fontawesome/fontawesome.scss";
+@import "./fontawesome/solid.scss";
+@import "./fontawesome/brands.scss";
+$lg-path-fonts: $font-path;
+$lg-toolbar-bg: rgba(255, 255, 255, 0);
+@import "./lightGallery/lightgallery.scss";
+@import "./carousel.scss";
+@import "./navbar.scss";
+@import "./gallery.scss";
+
+// listing pages
+
+.hero-banner {
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat, no-repeat;
+  transition: all $animation-fast;
+  box-shadow: inset 0em 0em 0em 10000em rgba(0, 0, 0, 0.35);
+
+  &.has-link {
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.list-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .card-footer {
+    margin-top: auto;
+  }
+
+  .card-content {
+    color: $card-color;
+  }
+}
+
+.list-card {
+  &:hover {
+    .card-image figure img {
+      transform: scale(1.07);
+    }
+  }
+  .card-image figure {
+    overflow: hidden;
+    img {
+      transition: all $animation-fast;
+    }
+  }
+}
+
+// avatar
+
+.avatar {
+  figure {
+    border-radius: $radius-rounded;
+    border: 0.2rem solid $primary;
+    overflow: hidden;
+
+    img {
+      transition: all $animation-fast;
+    }
+    &:hover {
+      img {
+        transform: scale(1.07);
+      }
+    }
+  }
+
+  width: 70%;
+  max-width: 15rem;
+  margin: auto;
+  padding-bottom: $gap;
+}
+
+// blog posts
+
+.post-hero-banner {
+  picture {
+    display: flex;
+    max-height: 65vh;
+
+    img {
+      object-fit: cover;
+      width: auto;
+      height: auto;
+      min-width: 100%;
+      min-height: 100%;
+    }
+  }
+}
+
+// general
+
+.content {
+    figure {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+.inline-fullwidth {
+    width: 100vw;
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+
+    figure {
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 2em;
+        margin-bottom: 2em;
+    }
+}
+
+.animate-loading {
+  // AOS uses the opacity property. To avoid breaking AOS, use filter for the load animation
+  filter: opacity(0);
+
+  &.img-loaded {
+    filter: opacity(1);
+    // opacity and transform are included to keep AOS alive
+    transition: opacity,transform,filter $animation-slow;
+  }
+}

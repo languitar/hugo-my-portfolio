@@ -1,0 +1,23 @@
+.lg-on {
+    overflow: hidden;
+}
+
+html.lg-on {
+	overflow: visible !important;
+	width: auto;
+}
+
+body.lg-on {
+	overflow: hidden !important;
+}
+
+.galleryImg {
+    img {
+        transition: transform $animation-fast, opacity $animation-slow !important;
+        max-width: initial;
+        height: initial;
+        &:hover {
+            transform: scale(1.07);
+        }
+    }
+}

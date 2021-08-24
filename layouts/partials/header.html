@@ -1,0 +1,55 @@
+<header>
+    <nav class="navbar is-dark" aria-label="main navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <div class="logo">
+                    <a href="{{ "/" | relURL }}" title="Home">
+                    <div class="logo-main title has-text-light is-marginless">
+                        Johannes Wienke
+                    </div>
+                    <div class="logo-sub is-size-6 has-text-light">Photography</div>
+                </a>
+                </div>
+
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="main-navigation">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="main-navigation" class="navbar-menu">
+                <div class="navbar-start"></div>
+
+                <div class="navbar-end">
+                    {{ $currentPage := . }}
+                    {{ range .Site.Menus.main }}
+
+                    {{ $active := or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}
+
+                    {{ if .HasChildren }}
+
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a href="{{ .URL }}" class="navbar-link is-arrowless{{ if $active }} is-active{{end}}" title="{{ .Name | plainify }}{{ with .Page.Params.Subtitle }} – {{ . | plainify }}{{ end }}">
+                            {{ .Name }}
+                        </a>
+
+                        <div class="navbar-dropdown">
+                        {{ range .Children }}
+                            {{ $childActive := $currentPage.IsMenuCurrent "main" . }}
+                            <a class="navbar-item{{ if $childActive }} is-active{{ end }}" href="{{ .URL }}" title="{{ .Name | plainify }}{{ with .Page.Params.Subtitle }} – {{ . | plainify }}{{ end }}">{{ .Name }}</a>
+                        {{ end }}
+                        </div>
+                    </div>
+
+                    {{ else }}
+
+                    <a href="{{ .URL }}" class="navbar-item{{ if $active }} is-active{{end}}" title="{{ .Name | plainify }}{{ with .Page.Params.Subtitle }} – {{ . | plainify }}{{ end }}">{{ .Name }}</a>
+
+                    {{ end }}
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

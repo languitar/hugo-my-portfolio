@@ -1,0 +1,11 @@
+{{ $images := .Page.Resources.Match (.Get 0) }}
+
+<div id="the-gallery" class="justified-gallery">
+    {{ range $images }}
+
+    <div class="masonry-grid-item">
+        <img src="{{ .Permalink }}" />
+    </div>
+
+    {{ end }}
+</div>

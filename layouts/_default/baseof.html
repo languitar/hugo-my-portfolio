@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html lang="{{ .Site.Language.Lang | default "en-us" }}">
+    <head>
+        {{- partial "head.html" . -}}
+        {{- block "header-inject" . }}{{- end }}
+    </head>
+    <body class="">
+        {{- partial "header.html" . -}}
+        <main id="content">
+        {{- block "main" . }}{{- end }}
+        </main>
+        {{- partial "footer.html" . -}}
+
+        {{ $aosJs := resources.Get "js/aos.js" }}
+        <script src="{{ $aosJs.RelPermalink }}"></script>
+        <script>
+            AOS.init({
+                offset: 50,
+                // duration synced with $animation-slow
+                duration: 1200
+            });
+            $(document).ready(
+                function() {
+                    $('.animate-loading').each(
+                        function() {
+                            console.log("Installing handler on");
+                            console.log(this);
+                            $(this).on(
+                                "load",
+                                function() {
+                                    console.log("Setting class on");
+                                    console.log(this);
+                                    $(this).addClass('img-loaded');
+                                    AOS.refresh();
+                                }
+                            )
+                            if(this.complete) {
+                                $(this).trigger('load');
+                            }
+                        }
+                    );
+                    $('.animate-loading img').each(
+                        function() {
+                            console.log("Installing handler on");
+                            console.log(this);
+                            $(this).on(
+                                "load",
+                                function() {
+                                    console.log("Setting class on");
+                                    console.log(this.parentElement);
+                                    $(this.parentElement).addClass('img-loaded');
+                                    AOS.refresh();
+                                }
+                            )
+                            if(this.complete) {
+                                $(this).trigger('load');
+                            }
+                        }
+                    );
+                }
+            );
+            $(document).ready(function() {
+                if ($('.use-in-lg').length) {
+                    const body = $("body");
+                    body.lightGallery({
+                        selector: '.use-in-lg',
+                        speed: 1200,
+                        download: false,
+                        counter: false,
+                        hideBarsDelay: 1500,
+                        getCaptionFromTitleOrAlt: false
+                    });
+                    body.on('onAfterOpen.lg', function(event){
+                        $('html').addClass('lg-on');
+                    });
+                    body.on('onCloseAfter.lg', function(event){
+                        $('html').removeClass('lg-on');
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,13 @@
+{{ define "main" }}
+
+{{ partial "basic-title.html" . }}
+
+<section class="section list-site">
+    <div class="container">
+        {{ $paginator := .Paginate .Pages.ByPublishDate.Reverse }}
+        {{ partial "post-tiles.html" (dict "context" . "pages" $paginator.Pages "enlargeFirst" true) }}
+        {{ partial "pagination.html" . }}
+    </div>
+</section>
+
+{{ end }}
